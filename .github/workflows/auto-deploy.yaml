@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-backend:
+    name: deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_URL }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            DATABASE_CONTAINER_NAME="database_container"
+            BACKEND_CONTAINER_NAME="backend_container"
+            
+            # Проверка, запущен ли контейнер базы данных
+            if ! docker ps --filter "name=$DATABASE_CONTAINER_NAME" --filter "status=running" | grep $DATABASE_CONTAINER_NAME; then
+              echo "Запускаем сервис базы данных..."
+            
+              # Создание необходимых директорий
+              mkdir -p /root/db_data /root/pgadmin_data
+              sudo chown -R 5050:5050 /root/pgadmin_data
+            
+              git clone --depth=1 -b master https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
+              cd /root/crypto-dashboard-backend
+            
+              docker compose -f docker-compose-db.stage.yaml up -d
+            
+              # Ожидание запуска контейнера
+              sleep 10
+            
+              # Проверка успешного запуска контейнера
+              if ! docker ps --filter "name=$DATABASE_CONTAINER_NAME" --filter "status=running" | grep $DATABASE_CONTAINER_NAME; then
+                echo "Не удалось запустить контейнер $DATABASE_CONTAINER_NAME."
+                exit 1
+              else
+                echo "Контейнер $DATABASE_CONTAINER_NAME запущен."
+              fi
+            else
+              echo "Контейнер $DATABASE_CONTAINER_NAME уже запущен."
+            fi
+            
+            git clone --depth=1 -b master https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
+            cd /root/crypto-dashboard-backend
+            
+            docker compose -f docker-compose.stage.yaml stop
+            docker compose -f docker-compose.stage.yaml rm -f
+            docker compose -f docker-compose.stage.yaml up -d --build
+            
+            if ! docker ps --filter "name=$BACKEND_CONTAINER_NAME" --filter "status=running" | grep $BACKEND_CONTAINER_NAME; then
+              echo "Не удалось запустить контейнер $BACKEND_CONTAINER_NAME."
+              exit 1
+            else
+              echo "Контейнер $BACKEND_CONTAINER_NAME запущен."
+            fi
+            
+            rm -rf crypto-dashboard-backend

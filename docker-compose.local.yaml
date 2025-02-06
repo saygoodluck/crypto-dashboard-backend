@@ -1,0 +1,18 @@
+services:
+  backend:
+    container_name: backend_container
+    restart: always
+    build: .
+    depends_on:
+      redis:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=local-docker
+
+  redis:
+    image: redis:7.4-alpine
+    restart: always
+    ports:
+      - "6379:6379"
