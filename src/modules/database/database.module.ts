@@ -10,11 +10,11 @@ import { User } from './model/User';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         dialect: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: configService.get('DB_PORT'),
-        username: configService.get('DB_USER'),
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
+        database: configService.get<string>('DB_NAME'),
         models: [User]
       }),
       inject: [ConfigService]

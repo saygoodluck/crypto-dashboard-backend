@@ -11,6 +11,8 @@ services:
     volumes:
       - /root/db_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - my_shared_network
 
   pgadmin:
     container_name: pgadmin4_container
@@ -23,3 +25,10 @@ services:
       - "5050:80"
     volumes:
       - /root/pgadmin_data:/var/lib/pgadmin
+    networks:
+      - my_shared_network
+
+
+networks:
+  my_shared_network:
+    external: true

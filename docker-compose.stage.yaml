@@ -10,9 +10,19 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=stage
+    networks:
+      - my_shared_network
+
 
   redis:
+    container_name: redis
     image: redis:7.4-alpine
     restart: always
     ports:
       - "6379:6379"
+    networks:
+      - my_shared_network
+
+networks:
+  my_shared_network:
+    external: true
