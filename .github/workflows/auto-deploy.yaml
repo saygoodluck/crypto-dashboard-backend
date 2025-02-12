@@ -19,6 +19,9 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
+            //
+            docker network create my_shared_network
+            
             DATABASE_CONTAINER_NAME="database_container"
             BACKEND_CONTAINER_NAME="backend_container"
             

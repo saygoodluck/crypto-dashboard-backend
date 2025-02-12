@@ -14,12 +14,10 @@ export class CacheService {
   public async createSession(data: SessionData): Promise<string> {
     const sessionToken: string = uuidv4();
     await this.cacheManager.set(`${sessionToken}`, data);
-    // await this.cacheManager.set(`${data.type[0]}${data.id} ${sessionToken}`, data);
     return sessionToken;
   }
 
   public async getSession(token: string): Promise<SessionData | undefined> {
-    // const key = `session:${token}`;
     const sessionData = await this.cacheManager.get<SessionData>(token);
 
     if (!sessionData) {

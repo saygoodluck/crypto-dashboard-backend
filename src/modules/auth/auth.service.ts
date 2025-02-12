@@ -24,28 +24,6 @@ export class AuthService {
   ) {}
 
   public async generateToken(user: User): Promise<string> {
-    // let user;
-
-    // if (loginUser.type === 'user') {
-    //   user = await this.userRepository.findOne({ where: { email: loginUser.email } });
-    // } else if (loginUser.type === 'admin') {
-    //   user = await this.adminRepository.findOne({ where: { email: loginUser.email } });
-    // } else {
-    //   throw new BadRequestException(`Unknown user type: ${loginUser.type}`);
-    // }
-
-    // if (!user) {
-    //   throw new BadRequestException('Wrong email');
-    // }
-    //
-    // if (!(await bcrypt.compare(loginUser.password, user.password))) {
-    //   throw new BadRequestException('Wrong password');
-    // }
-
-    // if (user.blocked === true) {
-    //   throw new BadRequestException('This user is blocked');
-    // }
-
     const sessionToken = await this.cacheService.createSession({
       id: user.id,
       type: 'user'
