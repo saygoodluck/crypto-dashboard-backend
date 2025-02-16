@@ -53,6 +53,10 @@ jobs:
             fi
             
             git clone --depth=1 -b master https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
+            
+            cp /etc/letsencrypt/live/crypto-dashboard.site/cert.pem /root/crypto-dashboard-backend/ssl
+            cp /etc/letsencrypt/live/crypto-dashboard.site/privkey.pem /root/crypto-dashboard-backend/ssl
+            
             cd /root/crypto-dashboard-backend
             
             docker compose -f docker-compose.stage.yaml stop
