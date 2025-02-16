@@ -6,8 +6,8 @@ import * as fs from 'fs';
 
 async function bootstrap() {
   const httpsOptions = {
-    key: fs.readFileSync('ssl/privkey.pem'), // Путь к закрытому ключу
-    cert: fs.readFileSync('ssl/cert.pem') // Путь к сертификату
+    key: fs.readFileSync('./ssl/cert.pem'),
+    cert: fs.readFileSync('./ssl/privkey.pem')
   };
   const app = await NestFactory.create(AppModule, { cors: { origin: '*' }, httpsOptions });
   const configService = app.get(ConfigService);
