@@ -35,7 +35,7 @@ jobs:
               mkdir -p /root/db_data /root/pgadmin_data
               sudo chown -R 5050:5050 /root/pgadmin_data
             
-              git clone --depth=1 -b master https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
+              git clone https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
               cd /root/crypto-dashboard-backend
             
               docker compose -f docker-compose-db.stage.yaml up -d
@@ -56,6 +56,7 @@ jobs:
             
             git clone https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
             
+            mkdir /root/crypto-dashboard-backend/ssl
             cp /etc/letsencrypt/live/crypto-dashboard.site/cert.pem /root/crypto-dashboard-backend/ssl
             cp /etc/letsencrypt/live/crypto-dashboard.site/privkey.pem /root/crypto-dashboard-backend/ssl
             
