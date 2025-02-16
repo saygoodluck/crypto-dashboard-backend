@@ -25,6 +25,8 @@ jobs:
             DATABASE_CONTAINER_NAME="database_container"
             BACKEND_CONTAINER_NAME="backend_container"
             
+            rm -rf /root/crypto-dashboard-backend
+            
             # Проверка, запущен ли контейнер базы данных
             if ! docker ps --filter "name=$DATABASE_CONTAINER_NAME" --filter "status=running" | grep $DATABASE_CONTAINER_NAME; then
               echo "Запускаем сервис базы данных..."
@@ -52,7 +54,7 @@ jobs:
               echo "Контейнер $DATABASE_CONTAINER_NAME уже запущен."
             fi
             
-            git clone --depth=1 -b master https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
+            git clone https://github.com/saygoodluck/crypto-dashboard-backend.git /root/crypto-dashboard-backend
             
             cp /etc/letsencrypt/live/crypto-dashboard.site/cert.pem /root/crypto-dashboard-backend/ssl
             cp /etc/letsencrypt/live/crypto-dashboard.site/privkey.pem /root/crypto-dashboard-backend/ssl
@@ -69,5 +71,3 @@ jobs:
             else
               echo "Контейнер $BACKEND_CONTAINER_NAME запущен."
             fi
-            
-            rm -rf crypto-dashboard-backend
